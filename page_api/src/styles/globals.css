@@ -51,3 +51,24 @@ h1.footer {
 p.footer {
   @apply m-0 text-center text-sm font-bold;
 }
+
+input {
+  @apply border p-2 m-5 w-20;
+}
+
+.form {
+  @apply p-2 m-5;
+}
+
+textarea {
+  @apply border w-full;
+}
+
+button {
+  @apply px-7 py-2 mx-2 bg-blue-800 text-white rounded-lg;
+}
+
+pre {
+  @apply m-5 p-2;
+}
+

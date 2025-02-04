@@ -1,105 +1,90 @@
-# Next.js 페이지 라우터와 서버 사이드 렌더링
+# Next.js 페이지 라우터와 API 사용법
 
-## 서버와 클라이언트
-Next.js는 클라이언트 사이드뿐만 아니라 서버 사이드 기능도 갖추고 있으며, 서버 사이드에서 미리 컴포넌트를 렌더링하여 HTML 페이지로 전송할 수도 있습니다.
+## 1. 웹 액세스와 API
 
----
+지금까지는 Next.js 애플리케이션을 컴포넌트 기반 페이지 형태로 구현했습니다. 하지만 웹 애플리케이션에서는 API를 이용해 데이터를 주고받을 수 있습니다.
 
-## CSR, SSR, SSG, ISR
+### API란?
+API(Application Programming Interface)는 웹 애플리케이션의 기능이나 데이터를 공유하는 서비스 인터페이스입니다. API는 JSON 또는 XML과 같은 데이터 형식으로 정보를 주고받는다.
 
-### 1. 클라이언트 사이드 렌더링 (CSR - Client-Side Rendering)
-- JavaScript가 브라우저에서 실행되면서 페이지를 동적으로 렌더링하는 방식.
-- 초기 로딩 속도가 느릴 수 있으나 페이지 전환이 빠름.
-- SEO(검색 엔진 최적화)에 불리함.
+## 2. Next.js에서 API 작성하기
 
-### 2. 서버 사이드 렌더링 (SSR - Server-Side Rendering)
-- 페이지 요청 시 서버에서 HTML을 생성하여 클라이언트에게 전달하는 방식.
-- SEO에 유리하지만, 요청마다 서버 부하가 발생할 수 있음.
+### 2.1 API 라우팅 방식
+Next.js에서는 **페이지 라우터**와 **앱 라우터**에 따라 API 작성 방식이 다릅니다. 여기서는 **페이지 라우터 방식**을 사용합니다.
 
-### 3. 정적 사이트 생성 (SSG - Static Site Generation)
-- 빌드 시 미리 HTML을 생성하여 정적 페이지를 제공하는 방식.
-- SEO에 유리하며 빠른 로딩 속도를 제공하지만, 데이터 변경 시 새로운 빌드가 필요함.
+### 2.2 `api` 폴더
+Next.js의 `pages/api` 폴더는 API 코드를 배치하는 전용 폴더입니다. 해당 폴더 내에 배치된 파일들은 자동으로 API 엔드포인트로 인식됩니다.
 
-### 4. 점진적 정적 생성 (ISR - Incremental Static Regeneration)
-- SSG와 SSR의 중간 형태로, 특정 시간마다 정적 페이지를 갱신할 수 있음.
-- 빠른 초기 로딩 속도와 최신 데이터 반영이 가능함.
+## 3. 기본 API 작성
 
-### 5. CSR vs SSR vs SSG vs ISR 비교
-| 방식  | 초기 로딩 속도 | SEO 적합성 | 서버 부하 | 데이터 최신화 |
-|-------|-------------|-----------|---------|----------|
-| **CSR** | 느림 | 낮음 | 낮음 | 즉시 반영 |
-| **SSR** | 보통 | 높음 | 높음 | 즉시 반영 |
-| **SSG** | 빠름 | 매우 높음 | 없음 | 빌드 시 반영 |
-| **ISR** | 빠름 | 매우 높음 | 낮음 | 일정 주기 반영 |
+### 3.1 `hello.ts` 파일 생성
+`pages/api/hello.ts` 파일을 만들고 다음과 같이 작성합니다.
 
----
+```typescript
+import type { NextApiRequest, NextApiResponse } from "next";
 
-## Next.js 라우팅 시스템과 렌더링 방식
-Next.js는 다음과 같은 두 가지 라우팅 시스템을 제공합니다:
-
-### 1. 앱 라우터
-- 컴포넌트 단위로 서버 컴포넌트와 클라이언트 컴포넌트를 구분하여 렌더링됨.
-- 서버 컴포넌트는 클라이언트 측에서 동적으로 업데이트되지 않는 요소를 담당.
-- 클라이언트 컴포넌트는 사용자 상호작용이 필요한 동적인 요소를 담당.
-
-### 2. 페이지 라우터
-- 페이지 단위로 렌더링 장소(서버/클라이언트)와 시점(빌드 시/요청 시)을 결정.
-- **정적 렌더링**: 빌드 시 미리 렌더링된 HTML 제공.
-- **동적 렌더링**: 요청 시마다 서버에서 HTML을 생성하여 제공.
-
----
-
-## 페이지 라우터의 렌더링 방식
-### 1. 서버 사이드 렌더링 (SSR)
-```tsx
-export const getServerSideProps = async ({ params }) => {
-  const data = await fetchData(params.id);
-  return { props: { data } };
+type Data = {
+  name: string;
 };
+
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  res.status(200).json({ name: "John Doe" });
+}
 ```
 
-### 2. 정적 사이트 생성 (SSG)
-```tsx
-export const getStaticProps = async () => {
-  const data = await fetchData();
-  return { props: { data } };
-};
+### 3.2 API 테스트
+브라우저에서 `http://localhost:3000/api/hello`에 접근하면 다음과 같은 JSON 응답을 확인할 수 있습니다.
+
+```json
+{
+  "name": "John Doe"
+}
 ```
 
-### 3. 점진적 정적 재생성 (ISR)
-```tsx
-export const getStaticProps = async () => {
-  const data = await fetchData();
-  return { props: { data }, revalidate: 10 };
-};
-```
+## 4. 컴포넌트에서 API 사용하기
 
-### 4. 동적 라우팅과 정적 사이트 생성 (SSG with Dynamic Routes)
-```tsx
-export const getStaticPaths = async () => {
-  const paths = [{ params: { id: '1' } }, { params: { id: '2' } }];
-  return { paths, fallback: false };
-};
-```
+### 4.1 `swr` 설치
+API 데이터를 가져오기 위해 `swr`을 사용합니다. 설치 명령어는 다음과 같습니다.
 
----
-
-## Next.js 실행 및 빌드
-### 1. 개발 모드 실행
 ```bash
-npm run dev
+npm install swr
 ```
 
-### 2. 빌드 및 실행
-```bash
-npm run build
-npm start
+### 4.2 `index.tsx` 파일 수정
+`pages/index.tsx`를 수정하여 API 데이터를 가져오도록 합니다.
+
+```tsx
+"use client";
+import useSWR from 'swr';
+
+const url = '/api/hello';
+const fetcher = (input: RequestInfo, init?: RequestInit) =>
+  fetch(input, init).then(res => res.json());
+
+export default function Home() {
+  const { data, error, isLoading } = useSWR(url, fetcher);
+
+  return (
+    <main>
+      <h1 className="header">Index page</h1>
+      <p>API를 이용하는 예제입니다.</p>
+      <p className="border p-3">
+        result: {error ? "ERROR!!" : isLoading ? "loading..." : data.name}
+      </p>
+    </main>
+  );
+}
 ```
 
----
+## 7. 마무리
+이 문서는 Next.js에서 API를 구현하고 활용하는 방법을 설명합니다.
 
-## 결론
-- **CSR**: 빠른 페이지 전환이 필요한 경우 (예: 대시보드, 관리자 페이지)
-- **SSR**: SEO가 중요하고, 데이터가 자주 변경되는 경우 (예: 뉴스, 검색 결과 페이지)
-- **SSG**: 정적인 콘텐츠가 많고 SEO가 중요한 경우 (예: 블로그, 문서 사이트)
-- **ISR**: 정적인 페이지이지만 일정 시간마다 데이터 업데이트가 필요한 경우 (예: 상품 목록 페이지)
+- `fetch`를 사용하여 데이터를 가져오는 방법
+- `useSWR`을 활용한 데이터 패칭과 상태 관리
+- `Next.js API Routes`를 이용한 동적 API 개발 방법
+- `파일 액세스 API`를 만들어 데이터 저장 및 불러오기
+
+Next.js에서 API를 효율적으로 사용하려면, 위 내용을 참고하여 `fetch`, `SWR`, `서버 액션`을 활용한 다양한 방법을 실험해보는 것이 중요합니다. 필요한 경우 API 요청 캐싱, 비동기 처리 최적화, 보안 설정 등을 추가하여 더욱 강력한 기능을 구현할 수 있습니다. 
