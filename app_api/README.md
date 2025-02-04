@@ -81,7 +81,7 @@ export default function Home() {
 
 ## 5. 앱 라우터와 라우트 핸들러
 
-Next.js의 **앱 라우터(App Router)**에서는 `api` 폴더 없이 `app` 폴더 내에서 어디든 API를 배치할 수 있습니다. 이를 위해 **라우트 핸들러(Route Handler)**를 사용합니다.
+Next.js의 **앱 라우터(App Router)** 에서는 `api` 폴더 없이 `app` 폴더 내에서 어디든 API를 배치할 수 있습니다. 이를 위해 **라우트 핸들러(Route Handler)** 를 사용합니다.
 
 ### 5.1 라우트 핸들러 기본 개념
 라우트 핸들러는 요청을 처리하는 역할을 하며, HTTP 메서드(GET, POST 등)에 따라 다르게 정의됩니다.
