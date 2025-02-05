@@ -1,0 +1,23 @@
+.title {
+    @apply text-2xl font-bold m-0 p-5 text-white bg-blue-800;
+}
+
+.msg {
+    @apply text-lg m-5 text-gray-900 text-center;
+}
+
+:any-link {
+    @apply font-bold text-orange-600
+}
+
+.header {
+    @apply text-center text-sm font-bold p-1 text-gray-900;
+}
+
+.footer {
+    @apply fixed bottom-0 w-full;
+}
+
+.footer-cotent {
+    @apply text-sm m-2 text-gray-600;
+}

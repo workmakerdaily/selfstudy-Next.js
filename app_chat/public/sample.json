@@ -1,0 +1,20 @@
+{
+    "message": "샘플 데이터입니다.",
+    "data": [
+        {
+            "name": "kim",
+            "mail": "kim@gilbut",
+            "age": "39"
+        },
+        {
+            "name": "lee",
+            "mail": "lee@flower",
+            "age": "28"
+        },
+        {
+            "name": "park",
+            "mail": "park@happy",
+            "age": "17"
+        }
+    ]
+}
